@@ -34,6 +34,10 @@ namespace JobExchangeLibrary.Services
 
             if (vacancy != null)
             {
+                if (vacancy.Company != null)
+                {
+                    vacancy.Company.Vacancies.Remove(vacancy);
+                }
                 vacancyList.Remove(vacancy);
             }
         }
@@ -61,6 +65,12 @@ namespace JobExchangeLibrary.Services
                 existing.ExpirationDate = item.ExpirationDate;
                 existing.IsActive = item.IsActive;
                 existing.CategoryId = item.CategoryId;
+
+                if (item.CompanyId != existing.CompanyId)
+                {
+                    existing.CompanyId = item.CompanyId;
+                    existing.Company = item.Company;
+                }
             }
         }
 
@@ -203,6 +213,29 @@ namespace JobExchangeLibrary.Services
             if (vacancy != null)
             {
                 vacancy.CategoryId = 0;
+            }
+        }
+
+        public List<Vacancy> GetByCompany(int companyId)
+        {
+            List<Vacancy> result = new List<Vacancy>();
+            for (int i = 0; i < vacancyList.Count; i++)
+            {
+                if (vacancyList[i].CompanyId == companyId)
+                {
+                    result.Add(vacancyList[i]);
+                }
+            }
+            return result;
+        }
+
+        public void SetCompany(int vacancyId, Company company)
+        {
+            Vacancy vacancy = GetById(vacancyId);
+            if (vacancy != null && company != null)
+            {
+                vacancy.CompanyId = company.Id;
+                vacancy.Company = company;
             }
         }
     }

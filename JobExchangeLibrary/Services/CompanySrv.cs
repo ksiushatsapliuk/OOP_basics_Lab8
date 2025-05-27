@@ -34,6 +34,7 @@ namespace JobExchangeLibrary.Services
 
             if (company != null)
             {
+                company.Vacancies.Clear();
                 companyList.Remove(company);
             }
         }
@@ -148,6 +149,49 @@ namespace JobExchangeLibrary.Services
             }
 
             return result;
+        }
+
+        public void AddVacancyToCompany(int companyId, Vacancy vacancy)
+        {
+            Company company = GetById(companyId);
+            if (company != null)
+            {
+                vacancy.CompanyId = companyId;
+                vacancy.Company = company;
+                company.Vacancies.Add(vacancy);
+            }
+        }
+
+        public void RemoveVacancyFromCompany(int companyId, int vacancyId)
+        {
+            Company company = GetById(companyId);
+            if (company != null)
+            {
+                Vacancy vacancy = null;
+                for (int i = 0; i < company.Vacancies.Count; i++)
+                {
+                    if (company.Vacancies[i].Id == vacancyId)
+                    {
+                        vacancy = company.Vacancies[i];
+                        break;
+                    }
+                }
+
+                if (vacancy != null)
+                {
+                    company.Vacancies.Remove(vacancy);
+                }
+            }
+        }
+
+        public List<Vacancy> GetVacanciesByCompany(int companyId)
+        {
+            Company company = GetById(companyId);
+            if (company != null)
+            {
+                return company.Vacancies;
+            }
+            return new List<Vacancy>();
         }
     }
 }

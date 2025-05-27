@@ -34,6 +34,10 @@ namespace JobExchangeLibrary.Services
 
             if (resume != null)
             {
+                if (resume.Unemployed != null)
+                {
+                    resume.Unemployed.Resumes.Remove(resume);
+                }
                 resumeList.Remove(resume);
             }
         }
@@ -62,6 +66,12 @@ namespace JobExchangeLibrary.Services
                 existing.LastUpdateDate = DateTime.Now;
                 existing.IsActive = item.IsActive;
                 existing.CategoryId = item.CategoryId;
+
+                if (item.UnemployedId != existing.UnemployedId)
+                {
+                    existing.UnemployedId = item.UnemployedId;
+                    existing.Unemployed = item.Unemployed;
+                }
             }
         }
 
@@ -205,6 +215,29 @@ namespace JobExchangeLibrary.Services
             if (resume != null)
             {
                 resume.CategoryId = 0;
+            }
+        }
+
+        public List<Resume> GetByUnemployed(int unemployedId)
+        {
+            List<Resume> result = new List<Resume>();
+            for (int i = 0; i < resumeList.Count; i++)
+            {
+                if (resumeList[i].UnemployedId == unemployedId)
+                {
+                    result.Add(resumeList[i]);
+                }
+            }
+            return result;
+        }
+
+        public void SetUnemployed(int resumeId, Unemployed unemployed)
+        {
+            Resume resume = GetById(resumeId);
+            if (resume != null && unemployed != null)
+            {
+                resume.UnemployedId = unemployed.Id;
+                resume.Unemployed = unemployed;
             }
         }
     }

@@ -356,6 +356,35 @@ namespace JobExchangeConsoleApp
             }
             Console.WriteLine();
 
+            Console.WriteLine("ДОДАТКОВІ ФУНКЦІЇ КОМПАНІЙ ТА БЕЗРОБІТНИХ");
+            Console.WriteLine("----------------------------------------");
+
+            companySrv.AddVacancyToCompany(comp1.Id, vac1);
+            companySrv.AddVacancyToCompany(comp2.Id, vac2);
+            companySrv.AddVacancyToCompany(comp3.Id, vac3);
+
+            Console.WriteLine("Демонстрація отримання списку вакансій привязаних до компанії:");
+            List<Vacancy> technosoftVacancies = companySrv.GetVacanciesByCompany(comp1.Id);
+            Console.WriteLine($"Вакансії компанії {comp1.Name}:");
+            for (int i = 0; i < technosoftVacancies.Count; i++)
+            {
+                Console.WriteLine($"  - {technosoftVacancies[i].Title}");
+            }
+            Console.WriteLine();
+
+            unemployedSrv.AddResumeToUnemployed(unemp1.Id, resume1);
+            unemployedSrv.AddResumeToUnemployed(unemp2.Id, resume2);
+            unemployedSrv.AddResumeToUnemployed(unemp3.Id, resume3);
+
+            Console.WriteLine("Демонстрація отримання списку резюме привязаних до безробітного:");
+            List<Resume> oleksiyResumes = unemployedSrv.GetResumesByUnemployed(unemp1.Id);
+            Console.WriteLine($"Резюме безробітного {unemp1.FirstName} {unemp1.LastName}:");
+            for (int i = 0; i < oleksiyResumes.Count; i++)
+            {
+                Console.WriteLine($"  - {oleksiyResumes[i].Title}");
+            }
+            Console.WriteLine();
+
             Console.WriteLine("7. ФУНКЦІОНАЛЬНІСТЬ ПОШУКУ");
             Console.WriteLine("----------------------------------------");
 
@@ -453,6 +482,31 @@ namespace JobExchangeConsoleApp
             {
                 Unemployed u = remainingUnemployed[i];
                 Console.WriteLine($"- {u.FirstName} {u.LastName}");
+            }
+            Console.WriteLine();
+
+            Console.WriteLine("Демонстрація видалення компанії:");
+            Console.WriteLine($"Кількість компаній до видалення: {companySrv.GetAll().Count}");
+            Console.WriteLine($"Кількість вакансій до видалення компанії: {vacancySrv.GetAll().Count}");
+
+            Company companyToDelete = companySrv.GetById(2);
+            if (companyToDelete != null)
+            {
+                Console.WriteLine($"Видаляємо компанію: {companyToDelete.Name}");
+            }
+
+            companySrv.Delete(2);
+            vacancySrv.Delete(2);
+
+            Console.WriteLine($"Кількість компаній після видалення: {companySrv.GetAll().Count}");
+            Console.WriteLine($"Кількість вакансій після видалення компанії: {vacancySrv.GetAll().Count}");
+
+            Console.WriteLine("Список компаній після видалення:");
+            List<Company> remainingCompanies = companySrv.GetAll();
+            for (int i = 0; i < remainingCompanies.Count; i++)
+            {
+                Company c = remainingCompanies[i];
+                Console.WriteLine($"- {c.Name} (Контакт: {c.ContactPersonFirstName} {c.ContactPersonLastName})");
             }
             Console.WriteLine();
 
